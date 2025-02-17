@@ -13,8 +13,8 @@ class AuthController extends Controller
       $credentials = $request->only('email', 'password');
       if (auth()->attempt($credentials)) {
         $user = auth()->user();
-        $token = $user->createToken('auth_token')->plainTextToken();
-        return response()->json(['user' => $user, 'token' => $token], 200);
+        $token = $user->createToken('auth_token')->plainTextToken;
+        return response()->json(['message' => 'logged in successfully', ' user' => $user, 'token' => $token], 200);
       }
       return response()->json(['error' => 'unauthorizated', 'message' => "Incorrect email or password"], 401);
     } catch (Exception $th) {
@@ -27,7 +27,7 @@ class AuthController extends Controller
       $credentials = $request->only('name', 'email', 'password');
       $conflictUser = User::whereEmail($credentials['email'])->first();
       if (!$conflictUser) {
-        $credentials['password'] = Hash::make($credentials['password']); 
+        $credentials['password'] = Hash::make($credentials['password']);
         $user = User::create($credentials);
         return response()->json(['message' => 'user registered successfully', 'user' => $user], 201);
       }
