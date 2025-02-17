@@ -14,9 +14,9 @@ class AuthController extends Controller
       if (auth()->attempt($credentials)) {
         $user = auth()->user();
         $token = $user->createToken('auth_token')->plainTextToken;
-        return response()->json(['message' => 'logged in successfully', ' user' => $user, 'token' => $token], 200);
+        return response()->json(['message' => 'Вы вошли успешно', ' user' => $user, 'token' => $token], 200);
       }
-      return response()->json(['error' => 'unauthorizated', 'message' => "Incorrect email or password"], 401);
+      return response()->json(['error' => 'unauthorizated', 'message' => "Неправильный логин или пароль"], 401);
     } catch (Exception $th) {
       return response()->json(['error' => 'unexpected error', 'message' => $th->getMessage()], 500);
     }
@@ -29,9 +29,9 @@ class AuthController extends Controller
       if (!$conflictUser) {
         $credentials['password'] = Hash::make($credentials['password']);
         $user = User::create($credentials);
-        return response()->json(['message' => 'user registered successfully', 'user' => $user], 201);
+        return response()->json(['message' => 'Вы зарегались', 'user' => $user], 201);
       }
-      return response()->json(['error' => 'conflict', 'message' => 'email already exists'], 409);
+      return response()->json(['error' => 'conflict', 'message' => 'Юзер с этой почтой уже есть'], 409);
     } catch (Exception $th) {
       return response()->json(['error' => 'unexpected error', 'message' => $th->getMessage()], 500);
     }
@@ -40,7 +40,7 @@ class AuthController extends Controller
   {
     try {
       auth()->user()->tokens()->delete();
-      return response()->json(['message' => 'user logged out successfully'], 200);
+      return response()->json(['message' => 'Вы вышли успешно'], 200);
     } catch (Exception $th) {
       return response()->json(['error' => 'unexpected error', 'message' => $th->getMessage()], 500);
     }
