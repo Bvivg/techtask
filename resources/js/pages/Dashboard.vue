@@ -1,6 +1,9 @@
 <template>
   <div class="container mt-4">
-    <h2>Проверка доступности доменов</h2>
+    <div class="d-flex justify-between">
+      <h2>Проверка доступности доменов</h2>
+      <button class="btn btn-danger">Выйти</button>
+    </div>
 
     <form @submit="checkDomains">
       <div class="mb-3">
@@ -31,9 +34,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import Request from '../Request';
-
+import router from '../router';
 const results = ref<Record<string, string>>({});
 const loading = ref(false);
 const errorMessage = ref('');
@@ -43,7 +46,7 @@ const checkDomains = async (e: Event) => {
   e.preventDefault();
 
   if (!domainsStr.value.trim()) {
-    
+
     errorMessage.value = 'форма не должна быть пустой';
     return;
   }
@@ -65,7 +68,16 @@ const checkDomains = async (e: Event) => {
     loading.value = false;
   }
 };
-
+const logout = async () =>{
+  await Request.delete('auth/logout');
+  localStorage.removeItem('auth_token');
+  router.push('/auth');
+}
+onMounted(() => {
+  if (!localStorage.getItem('auth_token')) {
+    router.push('/auth')
+  }
+})
 </script>
 
 <style scoped></style>
